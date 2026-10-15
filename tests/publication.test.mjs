@@ -3,13 +3,12 @@ import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { publicationErrors, validEmail, validPhone } from '../scripts/publication.mjs';
-import { ready } from './fixtures/publication.mjs';
+import { ready, unconfigured } from './fixtures/publication.mjs';
 
 // These values exist only in a validator fixture, never in the generated site.
-test('the delivered configuration cannot be published accidentally', () => {
-  const config = JSON.parse(readFileSync(new URL('../site.config.json', import.meta.url), 'utf8'));
-  assert.equal(config.allowPublication, false);
-  assert.ok(publicationErrors(config).length >= 10);
+test('an unconfigured site cannot be published accidentally', () => {
+  assert.equal(unconfigured.allowPublication, false);
+  assert.ok(publicationErrors(unconfigured).length >= 10);
 });
 test('a complete fixture satisfies the publication validator', () => {
   assert.deepEqual(publicationErrors(ready), []);

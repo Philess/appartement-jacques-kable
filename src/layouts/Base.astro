@@ -1,10 +1,13 @@
 ---
-import { config, description as defaultDescription, released, title as defaultTitle } from '../data/property';
+import { description as defaultDescription, released, title as defaultTitle } from '../data/property';
+import { absoluteSiteUrl, sitePath } from '../lib/urls';
+import manropeFont from '../assets/fonts/manrope.woff2?url';
+import tenorFont from '../assets/fonts/tenor-sans.woff2?url';
 import '../styles/site.css';
 interface Props { title?: string; description?: string; image?: string; schema?: object; noindex?: boolean }
 const { title = defaultTitle, description = defaultDescription, image, schema, noindex = false } = Astro.props;
-const canonical = released ? new URL(Astro.url.pathname, config.siteUrl).href : undefined;
-const shareImage = released && image ? new URL(image, config.siteUrl).href : undefined;
+const canonical = released ? absoluteSiteUrl(Astro.url.pathname) : undefined;
+const shareImage = released && image ? absoluteSiteUrl(image) : undefined;
 ---
 <!doctype html>
 <html lang="fr">
@@ -15,9 +18,9 @@ const shareImage = released && image ? new URL(image, config.siteUrl).href : und
     <meta name="robots" content={released && !noindex ? 'index,follow,max-image-preview:large' : 'noindex,nofollow'} />
     <meta name="theme-color" content="#151c1a" />
     <title>{title}</title>
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="preload" href="/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/tenor-sans.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="icon" href={sitePath('favicon.svg')} type="image/svg+xml" />
+    <link rel="preload" href={manropeFont} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={tenorFont} as="font" type="font/woff2" crossorigin />
     {canonical && <link rel="canonical" href={canonical} />}
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="fr_FR" />
@@ -30,21 +33,21 @@ const shareImage = released && image ? new URL(image, config.siteUrl).href : und
   </head>
   <body>
     <a class="skip" href="#contenu">Aller au contenu</a>
-    {!released && <div class="preview-bar"><div class="wrap">Aperçu local · publication désactivée <a href="/mentions-legales/">Informations à finaliser</a></div></div>}
+    {!released && <div class="preview-bar"><div class="wrap">Version de préparation · non indexable <a href={sitePath('mentions-legales/')}>Informations à finaliser</a></div></div>}
     <header class="site-header wrap">
-      <a class="wordmark" href="/">Jacques Kablé <span>Strasbourg</span></a>
+      <a class="wordmark" href={sitePath()}>Jacques Kablé <span>Strasbourg</span></a>
       <nav class="site-nav" aria-label="Navigation principale">
-        <a class="desktop-nav" href="/#galerie">Les photographies</a>
-        <a class="desktop-nav" href="/#caracteristiques">Le bien</a>
-        <a class="desktop-nav" href="/#quartier">Le quartier</a>
-        <details class="mobile-menu"><summary>Menu</summary><div><a href="/#galerie">Photographies</a><a href="/#caracteristiques">Caractéristiques</a><a href="/#quartier">Carte du quartier</a></div></details>
-        <a class="nav-contact" href="/#contact"><span class="visit-full">Demander une </span>visite <span aria-hidden="true">↗</span></a>
+        <a class="desktop-nav" href={sitePath('#galerie')}>Les photographies</a>
+        <a class="desktop-nav" href={sitePath('#caracteristiques')}>Le bien</a>
+        <a class="desktop-nav" href={sitePath('#quartier')}>Le quartier</a>
+        <details class="mobile-menu"><summary>Menu</summary><div><a href={sitePath('#galerie')}>Photographies</a><a href={sitePath('#caracteristiques')}>Caractéristiques</a><a href={sitePath('#quartier')}>Carte du quartier</a></div></details>
+        <a class="nav-contact" href={sitePath('#contact')}><span class="visit-full">Demander une </span>visite <span aria-hidden="true">↗</span></a>
       </nav>
     </header>
     <main id="contenu"><slot /></main>
     <footer class="site-footer wrap">
-      <div class="footer-top"><a class="wordmark" href="/">Jacques Kablé <span>Strasbourg</span></a>
-        <nav aria-label="Informations légales"><a href="/mentions-legales/">Mentions légales</a><a href="/confidentialite/">Confidentialité</a><a href="https://www.georisques.gouv.fr/" target="_blank" rel="noopener noreferrer">Géorisques ↗</a></nav>
+      <div class="footer-top"><a class="wordmark" href={sitePath()}>Jacques Kablé <span>Strasbourg</span></a>
+        <nav aria-label="Informations légales"><a href={sitePath('mentions-legales/')}>Mentions légales</a><a href={sitePath('confidentialite/')}>Confidentialité</a><a href="https://www.georisques.gouv.fr/" target="_blank" rel="noopener noreferrer">Géorisques ↗</a></nav>
       </div>
       <p class="footer-bottom">Vente directe entre particuliers · Photographies utilisées avec autorisation, filigranes d’origine conservés.<br/>Adresse exacte communiquée après contact.</p>
     </footer>

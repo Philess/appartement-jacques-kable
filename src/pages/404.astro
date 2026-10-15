@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
+import { sitePath } from '../lib/urls';
 ---
 <Base title="Page introuvable | Jacques Kablé" noindex>
-  <section class="legal-page wrap"><p class="eyebrow">404</p><h1>Cette page n’existe pas.</h1><p>Les photographies et les informations de l’appartement sont toujours accessibles.</p><a class="button" href="/">Découvrir l’appartement <span aria-hidden="true">↗</span></a></section>
+  <section class="legal-page wrap"><p class="eyebrow">404</p><h1>Cette page n’existe pas.</h1><p>Les photographies et les informations de l’appartement sont toujours accessibles.</p><a class="button" href={sitePath()}>Découvrir l’appartement <span aria-hidden="true">↗</span></a></section>
 </Base>

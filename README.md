@@ -42,7 +42,8 @@ Les champs vides ne sont **pas** remplacés par des données inventées.
 
 1. Renseigner `contactEmail` et `contactPhone` : les véritables liens e-mail/téléphone
    deviennent disponibles après reconstruction.
-2. Renseigner le domaine HTTPS réel dans `siteUrl`, à la racine et sans chemin.
+2. Renseigner l’origine HTTPS réelle dans `siteUrl`, sans chemin, paramètres ni fragment.
+   Le chemin de déploiement est séparé dans `basePath` (`/` par défaut).
 3. Finaliser `editorLegalNotice`, `hostName`, `hostAddress`, `hostUrl` et `privacyNotice`.
    Adapter les mentions au régime d'un éditeur particulier, sans publier par défaut
    l'adresse précise du logement. La confidentialité doit expliquer les demandes
@@ -80,6 +81,73 @@ dans Search Console. Aucun classement ou résultat enrichi Google n'est garanti.
 `SITE_MODE=release`. Il ne touche pas à la configuration et produit seulement `dist`.
 Une tentative release invalide supprime l’ancien `dist-release`, jamais l’aperçu `dist`.
 Ne pas utiliser directement `astro build` pour préparer une livraison.
+
+## GitHub Pages — préparation, pas encore déployé
+
+**Blocage constaté le 15 octobre 2026 :** le compte GitHub Free et le dépôt
+**privé** actuel ne permettent pas d’activer Pages (API GitHub : HTTP 422,
+« Your current plan does not support GitHub Pages for this repository. »).
+Voir les [conditions officielles GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site).
+Le propriétaire doit choisir et autoriser une option compatible. Rien dans le
+workflow ne change la visibilité, ne souscrit un abonnement ni ne crée un dépôt.
+
+URL de projet attendue, **non active actuellement** :
+`https://philess.github.io/appartement-jacques-kable/`.
+Pour cette destination, après autorisation, renseigner `siteUrl` avec
+`https://philess.github.io` et `basePath` avec `/appartement-jacques-kable/`,
+puis compléter les données et confirmations de publication listées plus haut.
+Un domaine personnalisé utilise son origine réelle et habituellement `basePath: "/"`.
+Les origines et chemins sont normalisés ; URL dans le chemin, `..`, encodages,
+double barre oblique et paramètres sont refusés.
+
+**Un site Pages est normalement public, même si son dépôt source reste privé.
+`noindex` et `robots.txt` ne sont jamais un contrôle d’accès.** Pour un projet,
+le fichier `robots.txt` est situé sous le préfixe ; il ne remplace pas un éventuel
+fichier à la racine du domaine. La balise `noindex` reste présente dans chaque
+page d’aperçu.
+
+Après levée du blocage de plan/visibilité et autorisation du propriétaire :
+
+1. Activer Pages dans **Settings > Pages**, source **GitHub Actions**. Le workflow
+   lit cette configuration existante avec `enablement: false` ; il ne l’active pas.
+2. Dans **Actions > Deploy GitHub Pages manually > Run workflow**, choisir `main`
+   et le mode `release` (défaut). La configuration complète est obligatoire et
+   `siteUrl`/`basePath` doivent correspondre à la destination renvoyée par Pages.
+3. Le workflow effectue `npm ci`, `npm run check`, `npm test`, puis le build validé.
+   Il transfère uniquement `dist-release` ; seul le job de déploiement possède
+   `pages: write` et `id-token: write`, dans l’environnement `github-pages`.
+
+Aucun événement `push`, PR ou planification ne déclenche ce workflow. Les actions
+officielles sont épinglées à leurs SHA vérifiés. Aucun PAT ni secret supplémentaire
+n’est nécessaire.
+
+Le mode facultatif `preview` exige de saisir exactement
+`public preview, noindex is not access control`. Il publie **publiquement** `dist`
+avec `noindex`, sans modifier les valeurs absentes ni les confirmations `false`.
+Cette option n’est ni une autorisation générale de publier un aperçu incomplet,
+ni un mécanisme de confidentialité ; elle doit être choisie explicitement par
+le propriétaire après résolution du prérequis GitHub.
+
+### Vérifier un sous-chemin localement
+
+Un aperçu normal reste à la racine, même si `basePath` configure un projet pour
+la release. L’override `SITE_BASE` permet de tester volontairement un préfixe :
+
+```powershell
+$env:SITE_BASE = "/appartement-jacques-kable/"
+npm run build
+npm run preview -- --port 4372
+# Dans un autre terminal :
+python tests\browser.py --url http://127.0.0.1:4372/appartement-jacques-kable/ --output verification\pages-prefix
+# Après arrêt de cet aperçu, dans le terminal de build :
+Remove-Item Env:SITE_BASE
+npm run build
+```
+
+Ne pas reconstruire le même `dist` sous un autre préfixe pendant qu’un aperçu
+doit rester disponible. Pour les contrôles simultanés, utiliser une copie de test
+isolée et un autre port. Les polices sont maintenant des assets Vite importés :
+leurs URLs, comme celles des photos, sont préfixées aussi dans le CSS inline.
 
 ## Vérifier
 
@@ -130,6 +198,8 @@ Rapports HTML/JSON et captures : `verification` et dossier de livraison.
 - `src/components/LocationMap.astro` : carte et confidentialité de localisation.
 - `src/scripts/gallery.ts` : interactions de la galerie.
 - `scripts/publication.mjs` : contrôle de publication partagé avec la configuration Astro.
+- `scripts/site-address.mjs` et `src/lib/urls.ts` : origine, base et liens du site.
+- `.github/workflows/pages.yml` : déploiement manuel uniquement, sans activation automatique.
 - `tests/publication.test.mjs` : contrôles de configuration et d'intégrité des médias.
 - `tests/release-build.test.mjs` : builds preview/release isolés avec fixtures de test.
 - `tests/browser.py` : parcours navigateur et audit axe, à lancer sur l'aperçu local.
@@ -145,7 +215,8 @@ Carte : © les contributeurs OpenStreetMap, ODbL. Voir `public/maps/CREDITS.txt`
 figurent dans `tools/cartographie` ; `python generer-carte.py` y reconstruit les SVG
 sans requête réseau. Les cadrages utilisent le quartier public, pas la position du bien.
 
-Polices : Cormorant Garamond, Manrope et Tenor Sans. Licences dans `public/fonts/OFL-*.txt`.
+Polices : Cormorant Garamond, Manrope et Tenor Sans, dans `src/assets/fonts`.
+Licences dans `public/fonts/OFL-*.txt`.
 Les WOFF2 contiennent le latin occidental et français, le symbole euro et les signes
 utilisés dans les diagnostics. Cormorant conserve les graisses 400–500 réellement
 utilisées ; les fichiers complets et leurs licences restent disponibles dans les

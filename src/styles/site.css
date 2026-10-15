@@ -1,7 +1,7 @@
-@font-face{font-family:Manrope;src:url("/fonts/manrope.woff2") format("woff2");font-weight:200 800;font-display:swap}
-@font-face{font-family:Tenor;src:url("/fonts/tenor-sans.woff2") format("woff2");font-weight:400;font-display:swap}
-@font-face{font-family:Cormorant;src:url("/fonts/cormorant-garamond.woff2") format("woff2");font-weight:400 500;font-display:swap}
-@font-face{font-family:Cormorant;src:url("/fonts/cormorant-garamond-italic.woff2") format("woff2");font-style:italic;font-weight:400 500;font-display:swap}
+@font-face{font-family:Manrope;src:url("../assets/fonts/manrope.woff2") format("woff2");font-weight:200 800;font-display:swap}
+@font-face{font-family:Tenor;src:url("../assets/fonts/tenor-sans.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:Cormorant;src:url("../assets/fonts/cormorant-garamond.woff2") format("woff2");font-weight:400 500;font-display:swap}
+@font-face{font-family:Cormorant;src:url("../assets/fonts/cormorant-garamond-italic.woff2") format("woff2");font-style:italic;font-weight:400 500;font-display:swap}
 :root{color-scheme:dark;--paper:#151c1a;--ink:#f2eade;--muted:#bdc2b9;--line:#4b554f;--control:#808c83;--soft:#202b26;--accent:#ddc7b1;--on-accent:#19231d;--focus:#f6b68c}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.65 Manrope,Candara,sans-serif;-webkit-font-smoothing:antialiased}

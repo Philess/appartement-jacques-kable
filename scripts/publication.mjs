@@ -1,4 +1,4 @@
-import { isIP } from 'node:net';
+import { normalizeBase, normalizeSiteUrl } from './site-address.mjs';
 
 /** @param {unknown} value */
 export function validEmail(value) {
@@ -29,17 +29,17 @@ export function publicationErrors(candidate) {
   ]) {
     if (config[key] !== true) errors.push(`${label} manquante.`);
   }
-  const site = text('siteUrl');
   try {
-    const url = new URL(site);
-    if (url.protocol !== 'https:' || url.username || url.password || url.search || url.hash ||
-        url.pathname !== '/' || url.port || !url.hostname.includes('.') || isIP(url.hostname.replace(/^\[|\]$/g, '')) !== 0 ||
-        /(^localhost$|:|\.(local|localhost|lan|internal|test|invalid|example)$|(^|\.)example\.(com|org|net)$)/i.test(url.hostname)) {
-      errors.push('siteUrl doit être le domaine HTTPS public réel, sans chemin ni identifiants.');
-    }
+    normalizeSiteUrl(text('siteUrl'));
   } catch (error) {
     if (!(error instanceof TypeError)) throw error;
     errors.push('siteUrl doit contenir une URL HTTPS publique valide.');
+  }
+  try {
+    normalizeBase(config.basePath);
+  } catch (error) {
+    if (!(error instanceof TypeError)) throw error;
+    errors.push(error.message);
   }
   if (!validEmail(text('contactEmail'))) {
     errors.push('Adresse e-mail réelle du vendeur manquante ou invalide.');

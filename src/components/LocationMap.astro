@@ -1,5 +1,6 @@
 ---
 import { mapUrl } from '../data/property';
+import { sitePath } from '../lib/urls';
 ---
 <section class="chapter wrap location-section" id="quartier" aria-labelledby="quartier-title">
   <div class="section-head">
@@ -9,8 +10,8 @@ import { mapUrl } from '../data/property';
   <figure class="neighbourhood">
     <a href={mapUrl} target="_blank" rel="noopener noreferrer" aria-label="Explorer le quartier sur OpenStreetMap — nouvel onglet">
       <picture>
-        <source media="(max-width: 600px)" srcset="/maps/quartier-jacques-kable-mobile.svg" width="900" height="1000" />
-        <img src="/maps/quartier-jacques-kable.svg" width="1440" height="900" loading="lazy"
+        <source media="(max-width: 600px)" srcset={sitePath('maps/quartier-jacques-kable-mobile.svg')} width="900" height="1000" />
+        <img src={sitePath('maps/quartier-jacques-kable.svg')} width="1440" height="900" loading="lazy"
           alt="Carte du secteur Jacques Kablé à Strasbourg, autour du parc Contades et de l’avenue des Vosges. Aucun repère ne désigne l’appartement." />
       </picture>
     </a>

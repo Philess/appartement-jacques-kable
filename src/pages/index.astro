@@ -7,8 +7,9 @@ import Energy from '../components/Energy.astro';
 import Contact from '../components/Contact.astro';
 import { config, description, price, property, released, title } from '../data/property';
 import { photo, photos } from '../data/photos';
+import { absoluteSiteUrl, sitePath } from '../lib/urls';
 
-const base = released ? config.siteUrl.replace(/\/$/, '') + '/' : '/';
+const base = released ? absoluteSiteUrl() : sitePath();
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -30,7 +31,7 @@ const schema = {
         { '@type': 'LocationFeatureSpecification', name: 'Double garage en sous-sol', value: true },
         { '@type': 'LocationFeatureSpecification', name: 'Cave', value: true },
       ],
-      image: photos.slice(0, 10).map((item) => released ? new URL(item.full, config.siteUrl).href : item.full),
+      image: photos.slice(0, 10).map((item) => released ? absoluteSiteUrl(item.full) : item.full),
     },
     {
       '@type': 'Offer', '@id': `${base}#offre`, price: property.price, priceCurrency: property.currency,

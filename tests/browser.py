@@ -6,23 +6,40 @@ from playwright.sync_api import sync_playwright
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--url", default="http://127.0.0.1:4371")
+parser.add_argument("--output", type=Path)
 args = parser.parse_args()
 ROOT = Path(__file__).resolve().parents[1]
-ARTIFACTS = ROOT / "verification"
-ARTIFACTS.mkdir(exist_ok=True)
-origin = args.url.rstrip("/")
-assert urlparse(origin).hostname in ("127.0.0.1", "localhost"), "Local preview only"
-report = {"viewports": [], "accessibility": [], "browserErrors": [], "externalRequests": []}
+ARTIFACTS = args.output or ROOT / "verification"
+ARTIFACTS.mkdir(parents=True, exist_ok=True)
+site_url = args.url.rstrip("/") + "/"
+parsed = urlparse(site_url)
+assert parsed.hostname in ("127.0.0.1", "localhost"), "Local preview only"
+origin = f"{parsed.scheme}://{parsed.netloc}"
+base_path = parsed.path
+report = {"basePath": base_path, "viewports": [], "accessibility": [], "browserErrors": [], "externalRequests": [], "outsideBaseRequests": []}
+
+def site_link(path=""):
+    return urljoin(site_url, path.lstrip("/"))
+
+def observe(page):
+    page.on("pageerror", lambda error: report["browserErrors"].append(str(error)))
+    def request_seen(request):
+        target = urlparse(request.url)
+        if target.scheme not in ("http", "https"):
+            return
+        if target.netloc != parsed.netloc:
+            report["externalRequests"].append(request.url)
+        elif not target.path.startswith(base_path):
+            report["outsideBaseRequests"].append(request.url)
+    page.on("request", request_seen)
 
 with sync_playwright() as playwright:
     browser = playwright.chromium.launch(headless=True)
     context = browser.new_context(viewport={"width": 1440, "height": 900}, reduced_motion="reduce")
     page = context.new_page()
-    page.on("pageerror", lambda error: report["browserErrors"].append(str(error)))
-    page.on("request", lambda request: report["externalRequests"].append(request.url)
-            if urlparse(request.url).scheme in ("http", "https") and not request.url.startswith(origin + "/") else None)
+    observe(page)
     try:
-        page.goto(origin, wait_until="networkidle")
+        page.goto(site_url, wait_until="networkidle")
         page.evaluate("() => document.fonts.ready")
         assert page.locator("h1").count() == 1
         assert "Strasbourg" in page.locator("h1").inner_text()
@@ -31,6 +48,8 @@ with sync_playwright() as playwright:
         nodes = json.loads(schema)["@graph"]
         assert next(node for node in nodes if node["@type"] == "Offer")["price"] == 630000
         assert next(node for node in nodes if node["@type"] == "Apartment")["floorSize"]["value"] == 92.35
+        assert next(node for node in nodes if node["@type"] == "RealEstateListing")["url"] == base_path
+        assert all(path.startswith(base_path) for path in next(node for node in nodes if node["@type"] == "Apartment")["image"])
         assert page.locator('meta[name="robots"]').get_attribute("content") == "noindex,nofollow"
         assert page.locator('link[rel="canonical"]').count() == 0
         assert page.locator('form').count() == 0
@@ -43,6 +62,16 @@ with sync_playwright() as playwright:
         }""")
         assert original_downloads == 0, "Full-size images must load only after deliberate gallery use"
         report["initialFullSizePhotoDownloads"] = original_downloads
+        declared_assets = page.evaluate(r"""() => [
+            ...[...document.querySelectorAll('img[src],script[src]')].map(e => e.src),
+            ...[...document.querySelectorAll('link[href]')].map(e => e.href),
+            ...[...document.querySelectorAll('[srcset]')].flatMap(e =>
+                e.getAttribute('srcset').split(',').map(part => new URL(part.trim().split(/\\s+/)[0], location.href).href))
+        ]""")
+        for url in declared_assets:
+            target = urlparse(url)
+            assert target.netloc == parsed.netloc and target.path.startswith(base_path), url
+        report["declaredAssetUrls"] = len(declared_assets)
 
         for width, height in [(320, 844), (360, 844), (390, 844), (768, 900), (1024, 900), (1440, 900)]:
             print(f"Viewport {width}x{height}", flush=True)
@@ -110,11 +139,12 @@ with sync_playwright() as playwright:
         print("Internal links and all 23 images", flush=True)
         internal_links = {}
         for route in ("/", "/mentions-legales/", "/confidentialite/"):
-            page.goto(origin + route, wait_until="networkidle")
+            page.goto(site_link(route), wait_until="networkidle")
             for href in page.locator("a[href]").evaluate_all("(links) => links.map(link => link.href)"):
                 parts = urlparse(href)
                 if parts.netloc == urlparse(origin).netloc and parts.scheme in ("http", "https"):
                     path = parts.path
+                    assert path.startswith(base_path), href
                     internal_links.setdefault(path, set())
                     if parts.fragment:
                         internal_links[path].add(parts.fragment)
@@ -127,12 +157,14 @@ with sync_playwright() as playwright:
                 for anchor in anchors:
                     assert page.locator(f'[id="{anchor}"]').count() == 1, (url, anchor)
         report["internalLinks"] = len(internal_links)
-        page.goto(origin, wait_until="networkidle")
+        page.goto(site_link("mentions-legales/"), wait_until="networkidle")
+        page.locator("header .wordmark").click()
+        assert page.url == site_url
 
         print("Local map variants", flush=True)
         page.locator("#quartier").scroll_into_view_if_needed()
         page.wait_for_function("document.querySelector('#quartier img').complete && document.querySelector('#quartier img').naturalWidth > 0")
-        assert "/maps/quartier-jacques-kable.svg" in page.locator("#quartier img").evaluate("(image) => image.currentSrc")
+        assert site_link("maps/quartier-jacques-kable.svg") == page.locator("#quartier img").evaluate("(image) => image.currentSrc")
         assert page.locator("#quartier a").first.get_attribute("href") == "https://www.openstreetmap.org/#map=15/48.5932/7.7530"
         page.locator("#quartier").screenshot(path=str(ARTIFACTS / "quartier-bureau.png"))
         page.set_viewport_size({"width": 390, "height": 844})
@@ -141,23 +173,24 @@ with sync_playwright() as playwright:
             const image = document.querySelector('#quartier img');
             return image.complete && image.naturalWidth > 0 && image.currentSrc.includes('quartier-jacques-kable-mobile.svg');
         }""")
-        assert "quartier-jacques-kable-mobile.svg" in page.locator("#quartier img").evaluate("(image) => image.currentSrc")
+        assert site_link("maps/quartier-jacques-kable-mobile.svg") == page.locator("#quartier img").evaluate("(image) => image.currentSrc")
         page.locator("#quartier").screenshot(path=str(ARTIFACTS / "quartier-mobile.png"))
 
         print("Legal pages and crawler instructions", flush=True)
         for route in ("/mentions-legales/", "/confidentialite/", "/404/"):
-            response = page.goto(origin + route, wait_until="networkidle")
+            response = page.goto(site_link(route), wait_until="networkidle")
             assert response and response.status in (200, 404)
             assert page.locator("h1").count() == 1
             assert page.locator('html').get_attribute('lang') == 'fr'
             assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth + 1")
-        assert "Disallow: /" in context.request.get(origin + "/robots.txt").text()
-        assert "<url>" not in context.request.get(origin + "/sitemap.xml").text()
+        assert "Disallow: /" in context.request.get(site_link("robots.txt")).text()
+        assert "<url>" not in context.request.get(site_link("sitemap.xml")).text()
 
         print("Fallback without JavaScript", flush=True)
         no_js = browser.new_context(java_script_enabled=False, viewport={"width": 390, "height": 844})
         no_js_page = no_js.new_page()
-        no_js_page.goto(origin, wait_until="networkidle")
+        observe(no_js_page)
+        no_js_page.goto(site_url, wait_until="networkidle")
         no_js_page.locator(".more-photos summary").click()
         assert no_js_page.locator("[data-gallery-index]").count() == 23
         assert no_js_page.locator('[data-gallery-index="22"]').is_visible()
@@ -174,7 +207,8 @@ with sync_playwright() as playwright:
         print("Mobile touch gallery", flush=True)
         touch = browser.new_context(viewport={"width": 390, "height": 844}, has_touch=True)
         touch_page = touch.new_page()
-        touch_page.goto(origin, wait_until="networkidle")
+        observe(touch_page)
+        touch_page.goto(site_url, wait_until="networkidle")
         touch_page.locator('a[data-photo="14"]').first.tap()
         assert touch_page.locator("#photo-viewer").is_visible()
         touch_page.get_by_role("button", name="Photo suivante", exact=True).tap()
@@ -190,7 +224,7 @@ with sync_playwright() as playwright:
         report["galleryTouch"] = True
 
         print("Zoom 200%", flush=True)
-        page.goto(origin, wait_until="networkidle")
+        page.goto(site_url, wait_until="networkidle")
         page.set_viewport_size({"width": 1440, "height": 900})
         page.evaluate("document.documentElement.style.zoom = '2'")
         assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth + 1"), "Overflow at CSS zoom 200%"
@@ -199,7 +233,8 @@ with sync_playwright() as playwright:
         page.evaluate("document.documentElement.style.zoom = '1'")
         zoom = browser.new_context(viewport={"width": 720, "height": 450}, device_scale_factor=2)
         zoom_page = zoom.new_page()
-        zoom_page.goto(origin, wait_until="networkidle")
+        observe(zoom_page)
+        zoom_page.goto(site_url, wait_until="networkidle")
         assert zoom_page.evaluate("document.documentElement.scrollWidth <= window.innerWidth + 1")
         zoom_page.locator(".mobile-menu summary").click()
         assert zoom_page.get_by_role("link", name="Carte du quartier", exact=True).is_visible()
@@ -209,6 +244,7 @@ with sync_playwright() as playwright:
         report["galleryKeyboardAndFocus"] = True
         assert not report["browserErrors"], report["browserErrors"]
         assert not report["externalRequests"], report["externalRequests"]
+        assert not report["outsideBaseRequests"], report["outsideBaseRequests"]
     finally:
         (ARTIFACTS / "browser-report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
         browser.close()

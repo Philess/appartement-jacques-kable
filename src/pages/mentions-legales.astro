@@ -1,18 +1,19 @@
 ---
 import Base from '../layouts/Base.astro';
 import { config, released } from '../data/property';
+import { sitePath } from '../lib/urls';
 ---
 <Base title="Mentions légales | Appartement Jacques Kablé, Strasbourg" description="Informations sur l’éditeur, l’hébergement et les droits des contenus de ce site immobilier.">
   <article class="legal-page wrap">
     <p class="eyebrow">Informations légales</p><h1>Mentions légales</h1>
-    {!released && <p class="preview-note"><strong>Version locale non publiée.</strong> L’identité de l’éditeur selon le régime applicable, les informations d’hébergement et les coordonnées publiques doivent être finalisées avant mise en ligne. Le site ne permet actuellement aucune demande de visite tant que les contacts ne sont pas renseignés.</p>}
+    {!released && <p class="preview-note"><strong>Version de préparation.</strong> L’identité de l’éditeur selon le régime applicable, les informations d’hébergement et les coordonnées publiques doivent être finalisées avant publication de l’annonce. Les moyens de contact non renseignés restent désactivés. L’absence d’indexation ne protège pas l’accès à un aperçu hébergé publiquement.</p>}
     <h2>Édition du site</h2><p class="preserve-lines">{config.editorLegalNotice || 'Mentions de l’éditeur particulier à renseigner avant publication. L’adresse exacte du bien vendu n’est pas rendue publique par ce site.'}</p>
     <h2>Hébergement</h2>
-    {config.hostName ? <p>{config.hostName}<br/>{config.hostAddress}<br/>{config.hostUrl}</p> : <p>Aucun hébergement public n’a été choisi. Cet aperçu est consultable localement.</p>}
+    {config.hostName ? <p>{config.hostName}<br/>{config.hostAddress}<br/>{config.hostUrl}</p> : <p>Les informations définitives de l’hébergeur restent à renseigner avant publication de l’annonce.</p>}
     <h2>Contact</h2><p>{config.contactEmail || 'E-mail du propriétaire non renseigné.'}<br/>{config.contactPhone || 'Téléphone du propriétaire non renseigné.'}</p>
     <h2>Présentation du bien</h2><p>Ce site présente un appartement en vente directe à Strasbourg, secteur Jacques Kablé. Les informations ne remplacent pas les diagnostics, mesurages et documents contractuels qui seront remis à l’acquéreur. Les photographies montrent le bien au moment de leur prise de vue.</p>
     <h2>Photographies et textes</h2><p>Les photographies issues de l’annonce Gaël Sturtz sont utilisées avec l’autorisation confirmée par le propriétaire. Les filigranes sont conservés. Les textes de présentation ont été rédigés pour ce site à partir des caractéristiques du bien. La réutilisation des photographies par des tiers nécessite les autorisations correspondantes.</p>
-    <h2>Cartographie et typographies</h2><p>La carte du quartier utilise les données <a href="https://www.openstreetmap.org/copyright" rel="noopener noreferrer" target="_blank">© les contributeurs OpenStreetMap, sous licence ODbL</a>. Elle ne désigne pas l’immeuble. La <a href="/maps/source-osm.json">sélection de données utilisée</a> et les <a href="/maps/CREDITS.txt">crédits</a> sont disponibles. Les polices Cormorant Garamond, Manrope et Tenor Sans sont hébergées localement sous licence SIL Open Font License.</p>
-    <p><a class="text-link" href="/">Revenir à l’appartement <span aria-hidden="true">↗</span></a></p>
+    <h2>Cartographie et typographies</h2><p>La carte du quartier utilise les données <a href="https://www.openstreetmap.org/copyright" rel="noopener noreferrer" target="_blank">© les contributeurs OpenStreetMap, sous licence ODbL</a>. Elle ne désigne pas l’immeuble. La <a href={sitePath('maps/source-osm.json')}>sélection de données utilisée</a> et les <a href={sitePath('maps/CREDITS.txt')}>crédits</a> sont disponibles. Les polices Cormorant Garamond, Manrope et Tenor Sans sont hébergées localement sous licence SIL Open Font License.</p>
+    <p><a class="text-link" href={sitePath()}>Revenir à l’appartement <span aria-hidden="true">↗</span></a></p>
   </article>
 </Base>

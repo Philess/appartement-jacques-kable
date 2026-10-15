@@ -1,6 +1,7 @@
 {
   "allowPublication": false,
   "siteUrl": "",
+  "basePath": "/",
   "contactEmail": "",
   "contactPhone": "",
   "editorLegalNotice": "",

@@ -1,6 +1,7 @@
 ---
 import Photo from './Photo.astro';
 import { photos } from '../data/photos';
+import { sitePath } from '../lib/urls';
 ---
 <section class="gallery-section chapter wrap" id="galerie" aria-labelledby="gallery-title">
   <div class="section-head">
@@ -26,7 +27,7 @@ import { photos } from '../data/photos';
     <button type="button" data-next aria-label="Photo suivante">→</button>
   </div>
   <p id="viewer-position" role="status" aria-live="polite"></p>
-  <p id="viewer-error" role="alert" hidden>Cette photographie n’a pas pu être chargée. <a id="viewer-original" href="/">Ouvrir le fichier directement</a>.</p>
+  <p id="viewer-error" role="alert" hidden>Cette photographie n’a pas pu être chargée. <a id="viewer-original" href={sitePath()}>Ouvrir le fichier directement</a>.</p>
 </dialog>
 <script>
   import '../scripts/gallery';

@@ -82,20 +82,29 @@ dans Search Console. Aucun classement ou résultat enrichi Google n'est garanti.
 Une tentative release invalide supprime l’ancien `dist-release`, jamais l’aperçu `dist`.
 Ne pas utiliser directement `astro build` pour préparer une livraison.
 
-## GitHub Pages — préparation, pas encore déployé
+## GitHub Pages — aperçu public en ligne
 
-**Blocage constaté le 15 octobre 2026 :** le compte GitHub Free et le dépôt
-**privé** actuel ne permettent pas d’activer Pages (API GitHub : HTTP 422,
-« Your current plan does not support GitHub Pages for this repository. »).
+**Le 15 octobre 2026, le propriétaire a rendu le dépôt public et autorisé la
+publication.** GitHub Pages est activé, avec HTTPS imposé. Un **aperçu public**
+est en ligne : [https://philess.github.io/appartement-jacques-kable/](https://philess.github.io/appartement-jacques-kable/).
+Le [déploiement réussi](https://github.com/Philess/appartement-jacques-kable/actions/runs/38718267276)
+a utilisé le mode `preview` et sa confirmation explicite. Les données manquantes
+n’ont pas été inventées ni remplacées : les contacts restent inactifs et les
+pages portent toujours `noindex`.
+
+**Historique :** l’activation avait d’abord été refusée (HTTP 422) lorsque ce
+dépôt était privé sur GitHub Free. Cette restriction Free/dépôt privé reste une
+condition générale, mais n’est plus le blocage de ce projet devenu public.
 Voir les [conditions officielles GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site).
-Le propriétaire doit choisir et autoriser une option compatible. Rien dans le
-workflow ne change la visibilité, ne souscrit un abonnement ni ne crée un dépôt.
+Le workflow ne change pas la visibilité, ne souscrit pas d’abonnement et ne crée
+pas de dépôt.
 
-URL de projet attendue, **non active actuellement** :
-`https://philess.github.io/appartement-jacques-kable/`.
-Pour cette destination, après autorisation, renseigner `siteUrl` avec
+**L’annonce finale indexable n’est pas encore publiée.** Elle exige les véritables
+coordonnées du vendeur, les données et justificatifs de diagnostic, les informations
+légales et d’hébergement, ainsi que les confirmations et l’autorisation de release
+listées plus haut. Pour cette destination, renseigner alors `siteUrl` avec
 `https://philess.github.io` et `basePath` avec `/appartement-jacques-kable/`,
-puis compléter les données et confirmations de publication listées plus haut.
+sans désactiver les contrôles de publication.
 Un domaine personnalisé utilise son origine réelle et habituellement `basePath: "/"`.
 Les origines et chemins sont normalisés ; URL dans le chemin, `..`, encodages,
 double barre oblique et paramètres sont refusés.
@@ -106,10 +115,11 @@ le fichier `robots.txt` est situé sous le préfixe ; il ne remplace pas un éve
 fichier à la racine du domaine. La balise `noindex` reste présente dans chaque
 page d’aperçu.
 
-Après levée du blocage de plan/visibilité et autorisation du propriétaire :
+Pour passer de l’aperçu public à une release validée, après finalisation des
+informations et autorisation du propriétaire :
 
-1. Activer Pages dans **Settings > Pages**, source **GitHub Actions**. Le workflow
-   lit cette configuration existante avec `enablement: false` ; il ne l’active pas.
+1. Pages est déjà activé dans **Settings > Pages**, source **GitHub Actions**. Le
+   workflow lit cette configuration avec `enablement: false` ; il ne l’active pas.
 2. Dans **Actions > Deploy GitHub Pages manually > Run workflow**, choisir `main`
    et le mode `release` (défaut). La configuration complète est obligatoire et
    `siteUrl`/`basePath` doivent correspondre à la destination renvoyée par Pages.
@@ -121,12 +131,12 @@ Aucun événement `push`, PR ou planification ne déclenche ce workflow. Les act
 officielles sont épinglées à leurs SHA vérifiés. Aucun PAT ni secret supplémentaire
 n’est nécessaire.
 
-Le mode facultatif `preview` exige de saisir exactement
+Le mode `preview`, utilisé pour l’aperçu actuellement en ligne, exige de saisir exactement
 `public preview, noindex is not access control`. Il publie **publiquement** `dist`
 avec `noindex`, sans modifier les valeurs absentes ni les confirmations `false`.
 Cette option n’est ni une autorisation générale de publier un aperçu incomplet,
-ni un mécanisme de confidentialité ; elle doit être choisie explicitement par
-le propriétaire après résolution du prérequis GitHub.
+ni un mécanisme de confidentialité ; chaque nouveau déploiement d’aperçu exige
+cette confirmation explicite.
 
 ### Vérifier un sous-chemin localement
 

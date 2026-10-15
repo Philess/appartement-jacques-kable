@@ -1,0 +1,52 @@
+---
+import { config, description as defaultDescription, released, title as defaultTitle } from '../data/property';
+import '../styles/site.css';
+interface Props { title?: string; description?: string; image?: string; schema?: object; noindex?: boolean }
+const { title = defaultTitle, description = defaultDescription, image, schema, noindex = false } = Astro.props;
+const canonical = released ? new URL(Astro.url.pathname, config.siteUrl).href : undefined;
+const shareImage = released && image ? new URL(image, config.siteUrl).href : undefined;
+---
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content={description} />
+    <meta name="robots" content={released && !noindex ? 'index,follow,max-image-preview:large' : 'noindex,nofollow'} />
+    <meta name="theme-color" content="#151c1a" />
+    <title>{title}</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/tenor-sans.woff2" as="font" type="font/woff2" crossorigin />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    {shareImage && <meta property="og:image" content={shareImage} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />}
+  </head>
+  <body>
+    <a class="skip" href="#contenu">Aller au contenu</a>
+    {!released && <div class="preview-bar"><div class="wrap">Aperçu local · publication désactivée <a href="/mentions-legales/">Informations à finaliser</a></div></div>}
+    <header class="site-header wrap">
+      <a class="wordmark" href="/">Jacques Kablé <span>Strasbourg</span></a>
+      <nav class="site-nav" aria-label="Navigation principale">
+        <a class="desktop-nav" href="/#galerie">Les photographies</a>
+        <a class="desktop-nav" href="/#caracteristiques">Le bien</a>
+        <a class="desktop-nav" href="/#quartier">Le quartier</a>
+        <details class="mobile-menu"><summary>Menu</summary><div><a href="/#galerie">Photographies</a><a href="/#caracteristiques">Caractéristiques</a><a href="/#quartier">Carte du quartier</a></div></details>
+        <a class="nav-contact" href="/#contact"><span class="visit-full">Demander une </span>visite <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+    <main id="contenu"><slot /></main>
+    <footer class="site-footer wrap">
+      <div class="footer-top"><a class="wordmark" href="/">Jacques Kablé <span>Strasbourg</span></a>
+        <nav aria-label="Informations légales"><a href="/mentions-legales/">Mentions légales</a><a href="/confidentialite/">Confidentialité</a><a href="https://www.georisques.gouv.fr/" target="_blank" rel="noopener noreferrer">Géorisques ↗</a></nav>
+      </div>
+      <p class="footer-bottom">Vente directe entre particuliers · Photographies utilisées avec autorisation, filigranes d’origine conservés.<br/>Adresse exacte communiquée après contact.</p>
+    </footer>
+  </body>
+</html>

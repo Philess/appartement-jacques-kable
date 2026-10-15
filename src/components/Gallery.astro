@@ -1,0 +1,33 @@
+---
+import Photo from './Photo.astro';
+import { photos } from '../data/photos';
+---
+<section class="gallery-section chapter wrap" id="galerie" aria-labelledby="gallery-title">
+  <div class="section-head">
+    <div><p class="eyebrow">03 / Le portfolio</p><h2 id="gallery-title">Vingt-trois regards.<br/>Un même lieu.</h2></div>
+    <p class="section-note">Les photographies réelles du bien, à explorer en grand. Les filigranes d’origine sont conservés.</p>
+  </div>
+  <div class="gallery-grid">
+    {photos.slice(0, 10).map((item, index) => <Photo id={item.id} small label index={index} />)}
+  </div>
+  <details class="more-photos">
+    <summary>Voir les {photos.length - 10} autres photographies</summary>
+    <div class="gallery-grid">
+      {photos.slice(10).map((item, index) => <Photo id={item.id} small label index={index + 10} />)}
+    </div>
+  </details>
+  <noscript><p class="small">Les images s’ouvrent directement dans le navigateur. Utilisez son bouton Retour pour revenir au site.</p></noscript>
+</section>
+<dialog id="photo-viewer" aria-labelledby="viewer-title">
+  <div class="viewer-top"><h2 id="viewer-title">Photographies du bien</h2><button type="button" data-close autofocus aria-label="Fermer la galerie">Fermer <span aria-hidden="true">×</span></button></div>
+  <div class="viewer-content">
+    <button type="button" data-previous aria-label="Photo précédente">←</button>
+    <figure><img id="viewer-image" alt="" /><figcaption id="viewer-caption"></figcaption></figure>
+    <button type="button" data-next aria-label="Photo suivante">→</button>
+  </div>
+  <p id="viewer-position" role="status" aria-live="polite"></p>
+  <p id="viewer-error" role="alert" hidden>Cette photographie n’a pas pu être chargée. <a id="viewer-original" href="/">Ouvrir le fichier directement</a>.</p>
+</dialog>
+<script>
+  import '../scripts/gallery';
+</script>

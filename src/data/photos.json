@@ -1,0 +1,186 @@
+[
+  {
+    "id": 14,
+    "file": "photo-14.jpg",
+    "title": "Terrasse · côté façade",
+    "alt": "Terrasse arborée avec jardinières et banc le long de la façade.",
+    "width": 2000,
+    "height": 1124
+  },
+  {
+    "id": 22,
+    "file": "photo-22.jpg",
+    "title": "Terrasse · côté ville",
+    "alt": "Fauteuils et plantations sur la terrasse, cathédrale à l’horizon.",
+    "width": 1999,
+    "height": 1500
+  },
+  {
+    "id": 3,
+    "file": "photo-3.jpg",
+    "title": "Le séjour",
+    "alt": "Séjour avec canapé d’angle et baies vitrées ouvertes sur la ville.",
+    "width": 1999,
+    "height": 1500
+  },
+  {
+    "id": 8,
+    "file": "photo-8.jpg",
+    "title": "La cuisine ouverte",
+    "alt": "Cuisine équipée avec îlot central et accès vitré à la terrasse.",
+    "width": 2000,
+    "height": 1500
+  },
+  {
+    "id": 17,
+    "file": "photo-17.jpg",
+    "title": "Terrasse · espace repas",
+    "alt": "Table sous l’avancée du bâtiment et terrasse végétalisée.",
+    "width": 2000,
+    "height": 1124
+  },
+  {
+    "id": 13,
+    "file": "photo-13.jpg",
+    "title": "Chambre · lit double",
+    "alt": "Chambre avec lit double et placard coulissant.",
+    "width": 2000,
+    "height": 1500
+  },
+  {
+    "id": 11,
+    "file": "photo-11.jpg",
+    "title": "Chambre · aménagement enfant",
+    "alt": "Chambre actuellement aménagée pour un enfant, avec accès vitré extérieur.",
+    "width": 2000,
+    "height": 1500
+  },
+  {
+    "id": 12,
+    "file": "photo-12.jpg",
+    "title": "Chambre · bureau actuel",
+    "alt": "Troisième chambre actuellement utilisée en bureau, avec espace de travail et mur vert.",
+    "width": 2000,
+    "height": 1500
+  },
+  {
+    "id": 4,
+    "file": "photo-4.jpg",
+    "title": "La salle de bains",
+    "alt": "Salle de bains avec meuble vasque, miroir rond et baignoire.",
+    "width": 2000,
+    "height": 1500
+  },
+  {
+    "id": 6,
+    "file": "photo-6.jpg",
+    "title": "La salle d’eau",
+    "alt": "Salle d’eau avec douche vitrée, vasque et miroir rond.",
+    "width": 2000,
+    "height": 1500
+  },
+  {
+    "id": 1,
+    "file": "photo-1.jpg",
+    "title": "L’espace repas",
+    "alt": "Table de la salle à manger, chaises et tableaux colorés au mur.",
+    "width": 2000,
+    "height": 1500
+  },
+  {
+    "id": 2,
+    "file": "photo-2.jpg",
+    "title": "Séjour · vers les baies",
+    "alt": "Vue du séjour vers les grandes baies, avec les suspensions au premier plan.",
+    "width": 1999,
+    "height": 1500
+  },
+  {
+    "id": 5,
+    "file": "photo-5.jpg",
+    "title": "Séjour · une autre perspective",
+    "alt": "Canapé et table du séjour, baies vitrées et terrasse à l’arrière-plan.",
+    "width": 2000,
+    "height": 1500
+  },
+  {
+    "id": 7,
+    "file": "photo-7.jpg",
+    "title": "La pièce de vie",
+    "alt": "Vue de la cuisine vers le séjour et l’espace repas.",
+    "width": 1999,
+    "height": 1500
+  },
+  {
+    "id": 9,
+    "file": "photo-9.jpg",
+    "title": "Cuisine · côté séjour",
+    "alt": "Cuisine blanche ouverte sur le séjour, avec assises autour de l’îlot.",
+    "width": 2000,
+    "height": 1500
+  },
+  {
+    "id": 10,
+    "file": "photo-10.jpg",
+    "title": "L’îlot de cuisine",
+    "alt": "Îlot central et meubles de cuisine vus depuis les assises.",
+    "width": 1999,
+    "height": 1500
+  },
+  {
+    "id": 16,
+    "file": "photo-16.jpg",
+    "title": "Terrasse · les plantations",
+    "alt": "Jardinières et terrasse le long de la façade de la résidence.",
+    "width": 2000,
+    "height": 1124
+  },
+  {
+    "id": 19,
+    "file": "photo-19.jpg",
+    "title": "Le salon extérieur",
+    "alt": "Assises du salon extérieur parmi les plantations de la terrasse.",
+    "width": 2000,
+    "height": 1500
+  },
+  {
+    "id": 20,
+    "file": "photo-20.jpg",
+    "title": "La terrasse végétalisée",
+    "alt": "Arche végétalisée, arbustes et assises sur la terrasse.",
+    "width": 2000,
+    "height": 1500
+  },
+  {
+    "id": 21,
+    "file": "photo-21.jpg",
+    "title": "Le panorama urbain",
+    "alt": "Toits de Strasbourg et silhouette de la cathédrale dans le panorama.",
+    "width": 1999,
+    "height": 1500
+  },
+  {
+    "id": 24,
+    "file": "photo-24.jpg",
+    "title": "La cathédrale à l’horizon",
+    "alt": "Panorama de Strasbourg avec plantations et garde-corps au premier plan.",
+    "width": 1999,
+    "height": 1500
+  },
+  {
+    "id": 25,
+    "file": "photo-25.jpg",
+    "title": "Une autre vue sur la ville",
+    "alt": "Photographie du panorama urbain depuis l’extérieur, avec une grue visible.",
+    "width": 2000,
+    "height": 1500
+  },
+  {
+    "id": 26,
+    "file": "photo-26.jpg",
+    "title": "Le lien avec l’extérieur",
+    "alt": "Vue intérieure vers une porte-fenêtre et la terrasse.",
+    "width": 1195,
+    "height": 837
+  }
+]

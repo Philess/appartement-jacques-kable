@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import { config, released } from '../data/property';
+---
+<Base title="Confidentialité | Appartement Jacques Kablé, Strasbourg" description="Consultation sans suivi publicitaire et informations sur les demandes adressées au propriétaire.">
+  <article class="legal-page wrap">
+    <p class="eyebrow">Votre confidentialité</p><h1>Consulter librement.<br/>Échanger directement.</h1>
+    {!released && <p class="preview-note">Aperçu local : les coordonnées et les modalités définitives de traitement des demandes sont à compléter avant publication.</p>}
+    <h2>Consultation du site</h2><p>Le site ne contient ni formulaire, compte utilisateur, outil de mesure d’audience ni suivi publicitaire. Il ne dépose pas de cookie et n’utilise pas le stockage local du navigateur. Les photos, les polices et la carte sont servies localement par le même site.</p>
+    <h2>Demandes de visite</h2><p>Les liens de téléphone et d’e-mail ouvrent votre application habituelle. Les échanges sont reçus directement par le propriétaire, pas par un formulaire de ce site. Ils peuvent contenir votre nom, vos coordonnées et les informations que vous choisissez de communiquer.</p>
+    <p class="preserve-lines">{config.privacyNotice || 'Le propriétaire devra préciser avant publication les finalités, la base juridique applicable, les destinataires, la durée de conservation et les modalités d’exercice des droits pour les demandes reçues. Aucune durée ni identité fictive n’est indiquée dans cet aperçu.'}</p>
+    <h2>Hébergement et journaux techniques</h2><p>L’hébergeur peut traiter les données techniques nécessaires à la fourniture et à la sécurité du service, notamment l’adresse IP et les journaux d’accès. Cela ne constitue pas un outil publicitaire installé sur ce site.</p>
+    <p>{config.hostName ? `Hébergeur : ${config.hostName}. ${config.hostUrl}` : 'L’hébergeur et ses modalités de traitement restent à identifier avant mise en ligne.'}</p>
+    <h2>Liens externes</h2><p>OpenStreetMap et Géorisques ne sont contactés que si vous suivez volontairement un lien vers leurs sites. Leurs politiques s’appliquent alors. Aucun composant cartographique distant n’est chargé pendant la consultation de cette page.</p>
+    <h2>Contact relatif aux données</h2><p>{config.contactEmail || 'Adresse du propriétaire à renseigner avant publication.'}</p>
+    <p><a class="text-link" href="/">Revenir à l’appartement <span aria-hidden="true">↗</span></a></p>
+  </article>
+</Base>

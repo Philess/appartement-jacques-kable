@@ -1,0 +1,29 @@
+---
+import { Picture } from 'astro:assets';
+import { photo } from '../data/photos';
+interface Props {
+  id: number;
+  hero?: boolean;
+  small?: boolean;
+  label?: boolean;
+  index?: number;
+}
+const { id, hero = false, small = false, label = false, index } = Astro.props;
+const item = photo(id);
+const widths = (small ? [240, 320, 480, 640] : [480, 720, 960, 1440, 2000]).filter((width) => width <= item.source.width);
+const sizes = hero ? '(max-width: 800px) calc(100vw - 36px), (max-width: 1440px) 72vw, 1014px'
+  : small && label ? '(max-width: 500px) calc((100vw - 48px) / 2), (max-width: 800px) calc((100vw - 68px) / 3), 250px'
+  : small ? '(max-width: 500px) calc((100vw - 56px) / 2.9), (max-width: 800px) calc((100vw - 70px) / 2.85), 278px'
+  : '(max-width: 800px) calc(100vw - 36px), 55vw';
+---
+<a class:list={['photo-link', { 'gallery-item': label }]} href={item.full} data-photo={id}
+   data-gallery-index={index} data-caption={item.title} data-alt={item.alt}
+   data-width={item.width} data-height={item.height}
+   aria-label={`Agrandir : ${item.title}`}>
+  <span class:list={{ 'gallery-frame': label }}>
+    <Picture src={item.source} formats={['avif', 'webp']} fallbackFormat="jpg"
+      widths={widths} sizes={sizes} alt={item.alt} quality={small ? 60 : 65}
+      loading={hero ? 'eager' : 'lazy'} fetchpriority={hero ? 'high' : 'auto'} />
+  </span>
+  {label && <span class="gallery-label"><span>{item.title}</span><span aria-hidden="true">↗</span></span>}
+</a>

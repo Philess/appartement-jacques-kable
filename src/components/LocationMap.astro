@@ -1,0 +1,23 @@
+---
+import { mapUrl } from '../data/property';
+---
+<section class="chapter wrap location-section" id="quartier" aria-labelledby="quartier-title">
+  <div class="section-head">
+    <div><p class="eyebrow">05 / Le quartier</p><h2 id="quartier-title">Strasbourg.<br/>À l’échelle du quotidien.</h2></div>
+    <p class="section-note">Le secteur Jacques Kablé, entre la place de Haguenau et le parc Contades. Une localisation indicative, pas un repère sur l’immeuble.</p>
+  </div>
+  <figure class="neighbourhood">
+    <a href={mapUrl} target="_blank" rel="noopener noreferrer" aria-label="Explorer le quartier sur OpenStreetMap — nouvel onglet">
+      <picture>
+        <source media="(max-width: 600px)" srcset="/maps/quartier-jacques-kable-mobile.svg" width="900" height="1000" />
+        <img src="/maps/quartier-jacques-kable.svg" width="1440" height="900" loading="lazy"
+          alt="Carte du secteur Jacques Kablé à Strasbourg, autour du parc Contades et de l’avenue des Vosges. Aucun repère ne désigne l’appartement." />
+      </picture>
+    </a>
+    <figcaption class="map-caption">
+      <p>Localisation indicative du quartier. Adresse exacte communiquée après contact.</p>
+      <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© les contributeurs OpenStreetMap · ODbL</a>
+    </figcaption>
+  </figure>
+  <a class="button secondary" href={mapUrl} target="_blank" rel="noopener noreferrer">Explorer le quartier sur OpenStreetMap <span aria-hidden="true">↗</span></a>
+</section>

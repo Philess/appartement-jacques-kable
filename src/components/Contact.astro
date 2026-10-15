@@ -1,0 +1,28 @@
+---
+import { config, price } from '../data/property';
+import { validEmail, validPhone } from '../../scripts/publication.mjs';
+const emailAvailable = validEmail(config.contactEmail);
+const phoneAvailable = validPhone(config.contactPhone);
+---
+<section class="contact-section wrap" id="contact" aria-labelledby="contact-title">
+  <div class="contact-copy">
+    <p class="eyebrow">06 / Le prochain regard</p>
+    <h2 id="contact-title">Certains lieux<br/>se découvrent en vrai.</h2>
+    <p>Pour organiser une visite, échangez directement avec le propriétaire. Simplement, par téléphone ou par e-mail.</p>
+  </div>
+  <div class="contact-card">
+    <p class="hero-price">{price}</p><p class="price-note">Vente directe · Strasbourg — Jacques Kablé</p>
+    {(!emailAvailable || !phoneAvailable) && (
+      <p class="preview-note" id="contact-note"><strong>Coordonnées du propriétaire à compléter.</strong><br/>Les moyens de contact non renseignés ou invalides sont désactivés dans cet aperçu. Aucun contact de l’agence n’est utilisé.</p>
+    )}
+    <div class="contact-options">
+      {phoneAvailable ? (
+        <a class="button" href={`tel:${config.contactPhone.replace(/[ ()-]/g, '')}`}>Appeler<span>{config.contactPhone}</span></a>
+      ) : <button disabled aria-describedby="contact-note">Téléphone<span>{config.contactPhone ? 'Numéro à corriger' : 'Non renseigné'}</span></button>}
+      {emailAvailable ? (
+        <a class="button secondary" href={`mailto:${config.contactEmail.trim()}?subject=${encodeURIComponent('Visite de l’appartement — Jacques Kablé')}`}>Écrire<span>{config.contactEmail}</span></a>
+      ) : <button disabled aria-describedby="contact-note">E-mail<span>{config.contactEmail ? 'Adresse à corriger' : 'Non renseigné'}</span></button>}
+    </div>
+    <p class="small">Adresse exacte communiquée après contact.<br/>Pas de formulaire, ni de suivi publicitaire.</p>
+  </div>
+</section>

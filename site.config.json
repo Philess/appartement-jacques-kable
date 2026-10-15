@@ -1,0 +1,20 @@
+{
+  "allowPublication": false,
+  "siteUrl": "",
+  "contactEmail": "",
+  "contactPhone": "",
+  "editorLegalNotice": "",
+  "hostName": "",
+  "hostAddress": "",
+  "hostUrl": "",
+  "privacyNotice": "",
+  "energyConsumption": null,
+  "greenhouseEmissions": null,
+  "verifiedChargesMonthly": null,
+  "verifiedAnnualBudgetShare": null,
+  "propertyTaxYear": null,
+  "coownershipProceedings": "",
+  "coownershipProceedingsDetails": "",
+  "informationVerified": false,
+  "mandateCleared": false
+}

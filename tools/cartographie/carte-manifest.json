@@ -1,0 +1,36 @@
+{
+  "source": "https://api.openstreetmap.org/api/0.6/map?bbox=7.7380,48.5870,7.7680,48.5994",
+  "externalMapUrl": "https://www.openstreetmap.org/#map=15/48.5932/7.7530",
+  "attribution": "© les contributeurs OpenStreetMap",
+  "license": "https://opendatacommons.org/licenses/odbl/1-0/",
+  "copyright": "https://www.openstreetmap.org/copyright",
+  "description": "Emprise publique du quartier uniquement ; aucune adresse ou position de l'appartement utilisée.",
+  "outputs": [
+    {
+      "file": "quartier-jacques-kable.svg",
+      "width": 1440,
+      "height": 900,
+      "bounds": [
+        7.738,
+        48.587,
+        7.768,
+        48.5994
+      ],
+      "features": 2137,
+      "labels": 6
+    },
+    {
+      "file": "quartier-jacques-kable-mobile.svg",
+      "width": 900,
+      "height": 1000,
+      "bounds": [
+        7.7445,
+        48.587,
+        7.7615,
+        48.5994
+      ],
+      "features": 1101,
+      "labels": 5
+    }
+  ]
+}

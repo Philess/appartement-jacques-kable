@@ -1,0 +1,31 @@
+CARTE STATIQUE DU SECTEUR JACQUES KABLÉ — STRASBOURG
+
+Données : © les contributeurs OpenStreetMap, sous licence ODbL 1.0.
+Copyright et attribution : https://www.openstreetmap.org/copyright
+Licence : https://opendatacommons.org/licenses/odbl/1-0/
+Source : https://api.openstreetmap.org/api/0.6/map?bbox=7.7380,48.5870,7.7680,48.5994
+
+Les tracés de rues, espaces verts, voies ferrées et cours d'eau proviennent
+de cette extraction réelle. La sélection minimale reproductible est conservée
+dans osm-quartier-cartographie.json ; elle ne contient pas les identifiants
+personnels des contributeurs, coordonnées de contact ou adresses de bâtiments.
+Les géométries de cette sélection restent disponibles sous ODbL.
+
+Le style cartographique local est défini dans generer-carte.py. Ce script
+utilise la bibliothèque standard Python et reproduit les deux SVG à partir
+de la sélection JSON. Aucun service n'est requis lors de leur affichage.
+Les PNG sont uniquement des rendus de contrôle ; privilégier les SVG locaux.
+
+Vue bureau : quartier-jacques-kable.svg, 1440 × 900.
+Vue mobile : quartier-jacques-kable-mobile.svg, 900 × 1000.
+Prévoir les deux rapports de dimensions dans le composant responsive.
+Lien d'exploration : https://www.openstreetmap.org/#map=15/48.5932/7.7530
+
+Ces cadrages représentent le quartier public. Aucune position de
+l'appartement, adresse précise ou indication d'immeuble n'a été utilisée.
+Ne pas ajouter de repère immobilier.
+
+Afficher également le crédit « © les contributeurs OpenStreetMap »
+à proximité de la carte en HTML, avec lien vers la page de copyright.
+Légende : « Localisation indicative du quartier. Adresse exacte communiquée
+après contact. »

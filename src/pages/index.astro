@@ -1,0 +1,127 @@
+---
+import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+import Gallery from '../components/Gallery.astro';
+import LocationMap from '../components/LocationMap.astro';
+import Energy from '../components/Energy.astro';
+import Contact from '../components/Contact.astro';
+import { config, description, price, property, released, title } from '../data/property';
+import { photo, photos } from '../data/photos';
+
+const base = released ? config.siteUrl.replace(/\/$/, '') + '/' : '/';
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'RealEstateListing', '@id': `${base}#annonce`, name: title, description,
+      inLanguage: 'fr-FR', url: base, about: { '@id': `${base}#appartement` },
+      offers: { '@id': `${base}#offre` },
+    },
+    {
+      '@type': 'Apartment', '@id': `${base}#appartement`,
+      name: 'Appartement T4 avec terrasse — Strasbourg, Jacques Kablé',
+      numberOfRooms: property.rooms, numberOfBedrooms: property.bedrooms,
+      floorSize: { '@type': 'QuantitativeValue', value: property.surface, unitCode: 'MTK' },
+      floorLevel: String(property.floor),
+      address: { '@type': 'PostalAddress', addressLocality: property.city, postalCode: property.postalCode, addressCountry: 'FR' },
+      amenityFeature: [
+        { '@type': 'LocationFeatureSpecification', name: 'Terrasse arborée de 152 m²', value: true },
+        { '@type': 'LocationFeatureSpecification', name: 'Ascenseur', value: true },
+        { '@type': 'LocationFeatureSpecification', name: 'Double garage en sous-sol', value: true },
+        { '@type': 'LocationFeatureSpecification', name: 'Cave', value: true },
+      ],
+      image: photos.slice(0, 10).map((item) => released ? new URL(item.full, config.siteUrl).href : item.full),
+    },
+    {
+      '@type': 'Offer', '@id': `${base}#offre`, price: property.price, priceCurrency: property.currency,
+      url: base, itemOffered: { '@id': `${base}#appartement` },
+    },
+  ],
+};
+---
+<Base image={photo(14).full} schema={schema}>
+  <section class="hero wrap" aria-labelledby="title">
+    <div class="hero-top">
+      <div><p class="eyebrow">Strasbourg — Jacques Kablé</p><h1 id="title">Appartement T4,<br/>terrasse à Strasbourg.</h1></div>
+      <div class="offer-summary">
+        <div class="offer-numbers">
+          <div><p class="hero-price">{price}</p><span class="price-note">Vente directe</span></div>
+          <dl class="hero-stats">
+            <div><dt class="stat-label">Habitable</dt><dd class="stat-value">92,35 <span class="unit">m²</span></dd></div>
+            <div><dt class="stat-label">Terrasse</dt><dd class="stat-value">152 <span class="unit">m²</span></dd></div>
+          </dl>
+        </div>
+        <div class="energy-row">
+          <span class="rating">DPE <b>{property.energyClass}</b></span><span class="rating ges">GES <b>{property.climateClass}</b></span>
+          <a class="text-link" href="#caracteristiques">Fiche complète <span aria-hidden="true">↗</span></a>
+          <a class="button hero-visit" href="#contact">Demander une visite <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <figure><Photo id={14} hero /><figcaption class="caption"><span>01 / Terrasse arborée · le long de la façade.</span><span>Agrandir ↗</span></figcaption></figure>
+      <div class="preview-rail" aria-label="Aperçu des photographies">
+        <figure><Photo id={22} small /><figcaption class="gallery-label">Terrasse · côté ville</figcaption></figure>
+        <figure><Photo id={3} small /><figcaption class="gallery-label">À l’intérieur</figcaption></figure>
+        <a class="button secondary" href="#galerie">Les 23 photographies <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+    <div class="hero-bottom">
+      <p>3 chambres, dont un bureau actuel · 9<sup>e</sup> étage sur 15 · Résidence 2019 · Ascenseur</p>
+      <p>Exposition sud-ouest · Double garage · Cave</p>
+      <a class="button mobile-visit" href="#contact">Demander une visite <span aria-hidden="true">↗</span></a>
+    </div>
+  </section>
+  <section class="poetry wrap" aria-labelledby="poetry-title">
+    <p class="eyebrow">Le lieu / L’esprit</p>
+    <h2 id="poetry-title">La ville devant soi.<br/><em>De l’espace pour vivre.</em></h2>
+    <p>Un intérieur ouvert sur une terrasse arborée. Le végétal proche, la cathédrale à l’horizon.</p>
+  </section>
+  <section class="terrace-story chapter wrap" aria-labelledby="terrace-title">
+    <div class="story-copy"><p class="eyebrow">01 / L’extérieur</p><h2 id="terrace-title">Le paysage entre<br/>dans le quotidien.</h2>
+      <p>Des plantations, plusieurs espaces pour s’installer et la ville en toile de fond. Une terrasse de 152 m² pour vivre autant dehors que dedans.</p>
+      <p class="story-fact"><strong>152 m²</strong> de terrasse arborée · sud-ouest</p>
+    </div>
+    <figure><Photo id={22} /><figcaption class="caption">Terrasse et cathédrale à l’horizon.</figcaption></figure>
+  </section>
+  <section class="interior-story chapter wrap" aria-labelledby="interior-title">
+    <figure><Photo id={8} /><figcaption class="caption">La cuisine ouverte équipée et son îlot.</figcaption></figure>
+    <div class="story-copy"><p class="eyebrow">02 / L’intérieur</p><h2 id="interior-title">Les moments<br/>que l’on partage.</h2>
+      <p>Le séjour et la cuisine ouverte équipée forment un espace de vie de 42 m². Trois chambres, dont une actuellement utilisée en bureau, permettent à chacun de trouver sa place.</p>
+      <p class="story-fact"><strong>92,35 m²</strong> habitables · 3 chambres</p>
+      <a class="text-link" href="#caracteristiques">Toutes les caractéristiques <span aria-hidden="true">↗</span></a>
+    </div>
+  </section>
+  <Gallery />
+  <section class="facts-section chapter wrap" id="caracteristiques" aria-labelledby="facts-title">
+    <div class="facts-layout">
+      <div class="facts-intro"><p class="eyebrow">04 / Les caractéristiques</p><h2 id="facts-title">L’essentiel.<br/>Et les détails.</h2><p>Des informations lisibles, pour regarder le bien au-delà des images.</p></div>
+      <div>
+        <dl class="spec-list">
+          <div><dt>Appartement</dt><dd>T4 · 92,35 m² habitables</dd></div>
+          <div><dt>Terrasse</dt><dd>152 m² · arborée · sud-ouest<br/>Vue sur la cathédrale et la ville</dd></div>
+          <div><dt>Pièces de vie</dt><dd>Séjour + cuisine ouverte équipée : 42 m²</dd></div>
+          <div><dt>Chambres</dt><dd>3, dont une actuellement utilisée en bureau</dd></div>
+          <div><dt>Résidence</dt><dd>2019 · <strong>9<sup>e</sup> étage sur 15</strong> · ascenseur</dd></div>
+          <div><dt>Sanitaires</dt><dd>1 salle de bains · 1 salle d’eau<br/>Toilettes séparées</dd></div>
+          <div><dt>Confort</dt><dd>Climatisation intégrée · double vitrage<br/>Pompe à chaleur collective</dd></div>
+          <div><dt>Annexes</dt><dd>Cave · double garage en sous-sol</dd></div>
+        </dl>
+        <Energy />
+        <div class="condominium">
+          <h3>Charges &amp; copropriété</h3>
+          {!released && <p class="preview-note">Les montants et la situation ci-dessous proviennent de l’annonce source et restent à confirmer par le propriétaire.</p>}
+          <dl class="spec-list">
+            <div><dt>Charges</dt><dd>{property.chargesMonthly} €/mois{!released && ' selon l’annonce'}.<br/>Quote-part moyenne annuelle du budget prévisionnel : {new Intl.NumberFormat('fr-FR').format(property.annualBudgetShare)} €.{!released && ' Articulation des deux montants à confirmer ; ils ne sont pas additionnés.'}</dd></div>
+            <div><dt>Taxe foncière</dt><dd>{new Intl.NumberFormat('fr-FR').format(property.propertyTax)} €{config.propertyTaxYear ? ` pour ${config.propertyTaxYear}.` : '/an. Millésime à confirmer.'}</dd></div>
+            <div><dt>Copropriété</dt><dd>Bien soumis au statut de la copropriété · {property.condominiumLots} lots au total.</dd></div>
+            <div><dt>Procédures</dt><dd>{config.coownershipProceedings === 'none' ? 'Aucune procédure en cours.' : config.coownershipProceedings === 'ongoing' ? `Procédure(s) en cours : ${config.coownershipProceedingsDetails}` : 'Aucune procédure selon l’annonce ; situation à réactualiser avant publication.'}</dd></div>
+          </dl>
+          <p class="small risks">Les informations sur les risques auxquels ce bien est exposé sont disponibles sur le site <a href="https://www.georisques.gouv.fr/" target="_blank" rel="noopener noreferrer">Géorisques</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <LocationMap />
+  <Contact />
+</Base>
